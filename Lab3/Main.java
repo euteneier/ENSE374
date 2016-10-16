@@ -26,16 +26,15 @@ public class Main {
 			first = newElement; 
 		else {
 			last.setNext(newElement); 
+			newElement.setPrevious(last);
 		}
 		last = newElement; 
 	}
 
 	public List deleteElement(int data){
 		List current = first; 
-		List LPrevious = new List();
 		while (current.getData() != data)
 		{
-			LPrevious = current;
 			current = current.getNext();
 			if (current == null)
 				return null;
@@ -43,8 +42,12 @@ public class Main {
 		if (current == first)
 			first = current.getNext(); 
 		else
-			LPrevious.setNext(current.getNext());
+			current.getPrevious().setNext(current.getNext());
 
+		if (current == last)
+			last = current.getPrevious(); 
+		else
+			current.getNext().setPrevious(current.getPrevious());
 		return current;
 	}
 	
@@ -74,11 +77,13 @@ public class Main {
 		System.out.println("");
 	}
 
-	public void printLinkedListTail(List node) {
-		if (node != null) {
-			printLinkedListTail(node.getNext());
-			node.printNode();
+	public void printLinkedListTail() {
+		List current = last;
+		while (current != null){
+			current.printNode();
+			current = current.getPrevious();
 		}
+		System.out.println("");
 	}
 
 	public static void main(String[] args) {
@@ -90,8 +95,7 @@ public class Main {
 		list.addElement(55);
 
 		list.printLinkedListHead();
-		list.printLinkedListTail(list.first);
-		System.out.println("");
+		list.printLinkedListTail();
 
 		list.deleteElement(11);
 		list.deleteElement(44);
@@ -129,6 +133,14 @@ class List {
 	
 	public List getNext() {
 		return this.next;
+	}
+	
+	public void setPrevious(List previous) {
+		this.previous = previous;
+	}
+	
+	public List getPrevious() {
+		return this.previous;
 	}
 	
 	public void printNode() {
